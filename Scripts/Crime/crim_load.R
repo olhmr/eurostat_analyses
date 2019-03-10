@@ -13,7 +13,7 @@ load_crim_pris_ctz <- function() {
   require(data.table) # Contains fread
   
   # Read data
-  crim_pris_ctz <- fread("crim_pris_ctz/crim_pris_ctz_1_Data.csv")
+  crim_pris_ctz <- fread("Data/Crime/crim_pris_ctz/crim_pris_ctz_1_Data.csv")
   
   # Update headings to be more intelligible and standardized
   names(crim_pris_ctz)[names(crim_pris_ctz) == "TIME"] <- "year"
