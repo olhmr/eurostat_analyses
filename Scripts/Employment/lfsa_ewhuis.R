@@ -23,7 +23,6 @@ boxplots_by_employment_status <- function(region_slice = "EU28", year_slice = 20
   return(p)
   
 }
-
 boxplots_by_isco08_category <- function(region_slice = "EU28", year_slice = 2017, worktime_slice = "FT") {
   
   # Dependencies
