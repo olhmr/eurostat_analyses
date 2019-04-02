@@ -1,3 +1,53 @@
+boxplots_by_employment_status <- function(region_slice = "EU28", year_slice = 2017, worktime_slice = "FT") {
+  
+  # Dependencies
+  require(data.table)
+  require(ggplot2)
+  require(plotly)
+  
+  # Plot
+  p <- ggplotly(ggplot(data = lfsa_ewhuis[region == region_slice & 
+                                            year == year_slice & 
+                                            worktime == worktime_slice & 
+                                            employment_status %in% c("Employed persons except contributing family workers", 
+                                                                     "Self-employed persons with employees (employers)",
+                                                                     "Self-employed persons without employees (own-account workers)",
+                                                                     "Contributing family workers") &
+                                            !is.na(weekly_hours), ], 
+                       aes(x = sex, y = weekly_hours)) + 
+                  geom_boxplot() + 
+                  facet_wrap(~employment_status))
+  
+  # Return
+  return(p)
+  
+}
+
+boxplots_by_isco08_category <- function(region_slice = "EU28", year_slice = 2017, worktime_slice = "FT") {
+  
+  # Dependencies
+  require(data.table)
+  require(ggplot2)
+  require(plotly)
+  
+  # Plot
+  p <- ggplotly(ggplot(data = lfsa_ewhuis[region == region_slice & 
+                                            year == year_slice & 
+                                            worktime == worktime_slice &
+                                            employment_status %in% c("Employed persons except contributing family workers", 
+                                                                     "Self-employed persons with employees (employers)",
+                                                                     "Self-employed persons without employees (own-account workers)",
+                                                                     "Contributing family workers") & 
+                                            !is.na(weekly_hours), ], 
+                       aes(x = sex, y = weekly_hours)) + 
+                  geom_boxplot() + 
+                  facet_wrap(~isco08_category))
+  
+  # Return
+  return(p)
+  
+}
+
 load_lfsa_ewhuis <- function() {
   
   # Dependencies
@@ -57,8 +107,22 @@ load_lfsa_ewhuis <- function() {
   lfsa_ewhuis[employment_status == "NCFAM", employment_status := "Employed persons except contributing family workers"]
   lfsa_ewhuis[employment_status == "NRP", employment_status := "No response"]
   
+  # Update isco08 to be more intelligible
+  lfsa_ewhuis[isco08_category == "NRP", isco08_category := "No response"]
+  lfsa_ewhuis[isco08_category == "OC0", isco08_category := "Armed forces"]
+  lfsa_ewhuis[isco08_category == "OC1", isco08_category := "Legislators, senior officials and managers"]
+  lfsa_ewhuis[isco08_category == "OC2", isco08_category := "Professionals"]
+  lfsa_ewhuis[isco08_category == "OC3", isco08_category := "Technicians and associate professionals"]
+  lfsa_ewhuis[isco08_category == "OC4", isco08_category := "Clerks"]
+  lfsa_ewhuis[isco08_category == "OC5", isco08_category := "Service workers and shop and market sales workers"]
+  lfsa_ewhuis[isco08_category == "OC6", isco08_category := "Skilled agricultural and fishery workers"]
+  lfsa_ewhuis[isco08_category == "OC7", isco08_category := "Craft and related trades workers"]
+  lfsa_ewhuis[isco08_category == "OC8", isco08_category := "Plant and machine operators and assemblers"]
+  lfsa_ewhuis[isco08_category == "OC9", isco08_category := "Elementary occupations"]
+  lfsa_ewhuis[isco08_category == "TOTAL", isco08_category := "Total"]
+  
   # Reformat
-  lfsa_ewhuis <- lfsa_ewhuis[, .(region, year = as.numeric(year), 
+  lfsa_ewhuis <- lfsa_ewhuis[, .(region, year = as.numeric(as.character(year)), 
                                  sex, worktime, employment_status, isco08_category, 
                                  weekly_hours = as.numeric(weekly_hours), flag)]
   
