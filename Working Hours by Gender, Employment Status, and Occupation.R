@@ -6,7 +6,7 @@ library(data.table)
 lfsa_ewhuis <- as.data.table(label_eurostat(get_eurostat(id = "lfsa_ewhuis")))
 
 # Plot
-ggplotly(ggplot(data = lfsa_ewhuis[geo == "Romania" & 
+ggplotly(ggplot(data = lfsa_ewhuis[geo == "Sweden" & 
                                      time == max(lfsa_ewhuis$time) & 
                                      worktime == "Full-time" & 
                                      wstatus %in% c("Employed persons except contributing family workers", 
